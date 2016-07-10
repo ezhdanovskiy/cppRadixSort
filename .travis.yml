@@ -4,6 +4,8 @@ install: true
 
 script:
   - mkdir build && cd build && cmake .. && make
+  - ./radixSort 100
+  - ./radixSort 500
   - ./radixSort 1000
 
 notifications:
