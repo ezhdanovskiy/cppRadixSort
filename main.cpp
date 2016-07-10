@@ -10,10 +10,8 @@
 #define LOG(chain) std::cout << chain << std::endl;
 #define LOG1(el) std::cout << #el << "=" << el << std::endl;
 
-long long mtime()
-{
+long long mtime() {
 	struct timeval t;
-
 	gettimeofday(&t, NULL);
 	long long mt = (long long)t.tv_sec * 1000 + t.tv_usec / 1000;
 	return mt;
@@ -52,16 +50,14 @@ int main(int argc, char **argv) {
 	std::vector<int> v2 = v1;
 //	LOG1(v1);
 
-	auto t1 = clock();
-	auto m1 = mtime();
+	auto t1 = mtime();
 	std::sort(begin(v1), end(v1));
-	LOG("std::sort take " << clock() - t1 << " ms, " << mtime() - m1 << " ms");
+	LOG("std::sort take " << mtime() - t1 << " ms");
 //	LOG1(v1);
 
-	auto t2 = clock();
-	auto m2 = mtime();
+	auto t2 = mtime();
 	bubbleSort(v2);
-	LOG("bubbleSort take " << clock() - t2 << " ms, " << mtime() - m2 << " ms");
+	LOG("bubbleSort take " << mtime() - t2 << " ms");
 //	LOG1(v2);
 
 	assert(v1 == v2);
