@@ -6,6 +6,10 @@ script:
   - mkdir build && cd build && cmake .. && make
   - ./radixSort 100
   - ./radixSort 500
+  - ./radixSort 600
+  - ./radixSort 700
+  - ./radixSort 800
+  - ./radixSort 900
   - ./radixSort 1000
 
 notifications:
