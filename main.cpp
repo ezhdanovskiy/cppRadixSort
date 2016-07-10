@@ -58,14 +58,14 @@ int main(int argc, char **argv) {
 	auto t2 = mtime();
 	std::stable_sort(begin(v2), end(v2));
 	LOG("std::stable_sort " << std::setw(10) << mtime() - t2 << " ms");
+	assert(v1 == v2);
 
 	if (size <= 100000) {
 		auto t3 = mtime();
 		bubbleSort(v3);
 		LOG("bubbleSort       " << std::setw(10) << mtime() - t3 << " ms");
+		assert(v1 == v3);
 	}
 
-	assert(v1 == v2);
-	assert(v1 == v3);
 	return 0;
 }
