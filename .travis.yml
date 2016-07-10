@@ -7,6 +7,7 @@ script:
   - ./radixSort 1000
   - ./radixSort 10000
   - ./radixSort 100000
+  - ./radixSort 1000000
 
 notifications:
   slack: j0ny:tlJolYCjWs5eI2DmeZFry8sa
