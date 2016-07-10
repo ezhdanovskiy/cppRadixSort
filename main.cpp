@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <sys/time.h>
+#include <iomanip>
 
 #define LOG(chain) std::cout << chain << std::endl;
 #define LOG1(el) std::cout << #el << "=" << el << std::endl;
@@ -48,18 +49,21 @@ int main(int argc, char **argv) {
 		v1[i] = rand();
 	}
 	std::vector<int> v2 = v1;
-//	LOG1(v1);
+	std::vector<int> v3 = v1;
 
 	auto t1 = mtime();
 	std::sort(begin(v1), end(v1));
-	LOG("std::sort take " << mtime() - t1 << " ms");
-//	LOG1(v1);
+	LOG("std::sort        " << std::setw(10) << mtime() - t1 << " ms");
 
 	auto t2 = mtime();
-	bubbleSort(v2);
-	LOG("bubbleSort take " << mtime() - t2 << " ms");
-//	LOG1(v2);
+	std::stable_sort(begin(v2), end(v2));
+	LOG("std::stable_sort " << std::setw(10) << mtime() - t2 << " ms");
+
+	auto t3 = mtime();
+	bubbleSort(v3);
+	LOG("bubbleSort       " << std::setw(10) << mtime() - t3 << " ms");
 
 	assert(v1 == v2);
+	assert(v1 == v3);
 	return 0;
 }
