@@ -16,18 +16,17 @@ long long mtime() {
 	return mt;
 }
 
-typedef uint8_t TDigit;
-typedef std::vector<TDigit> TDigits;
-
-std::ostream& operator<<(std::ostream &o, const TDigits &v) {
+template <typename TDigit>
+std::ostream& operator<<(std::ostream &o, const std::vector<TDigit> &v) {
 	o << "(" << v.size() << ")={ ";
 	for (auto &el : v) {
-		o << (int)el << ", ";
+		o << (uint64_t)el << ", ";
 	}
 	return o << "}";
 }
 
-void bubbleSort(TDigits &v) {
+template <typename TDigit>
+void bubbleSort(std::vector<TDigit> &v) {
 	for (int i = 0; i < v.size(); ++i) {
 		for (int j = i + 1; j < v.size(); ++j) {
 			if (v[i] > v[j]) {
@@ -37,12 +36,13 @@ void bubbleSort(TDigits &v) {
 	}
 }
 
-void radixSort(TDigits &v) {
-	const int typeBitsCnt = 8;
+template <typename TDigit>
+void radixSort(std::vector<TDigit> &v) {
+	const int typeBitsCnt = sizeof(TDigit) * 8;
 	const int bitStep = 4;
 	const int bitStepMaxValue = 16;
 	for (int r = 0; r < typeBitsCnt; r += bitStep) {
-		TDigits v2[bitStepMaxValue];
+		std::vector<TDigit> v2[bitStepMaxValue];
 		for (int i = 0; i < v.size(); ++i) {
 			v2[v[i]>>r & 0xf].push_back(v[i]);
 		}
@@ -55,21 +55,16 @@ void radixSort(TDigits &v) {
 	}
 }
 
-int main(int argc, char **argv) {
-	srand(time(NULL));
-
-	int size = 10;
-	if (argc > 1) {
-		size = atol(argv[1]);
-	}
-	LOG1(size);
-	TDigits v0(size);
+template <typename TDigit>
+void test(int size) {
+	const int typeBitsCnt = sizeof(TDigit) * 8;
+	LOG1(typeBitsCnt);
+	std::vector<TDigit> v0(size);
 	for (int i = 0; i < size; i++) {
 		v0[i] = rand() % std::numeric_limits<TDigit>::max();
 	}
-	TDigits v4 = v0;
 
-	TDigits v1 = v0;
+	std::vector<TDigit> v1 = v0;
 	{
 		auto t = mtime();
 		std::sort(begin(v1), end(v1));
@@ -77,7 +72,7 @@ int main(int argc, char **argv) {
 	}
 
 	{
-		TDigits v = v0;
+		std::vector<TDigit> v = v0;
 		auto t = mtime();
 		std::stable_sort(begin(v), end(v));
 		LOG("std::stable_sort " << std::setw(10) << mtime() - t << " ms");
@@ -85,7 +80,7 @@ int main(int argc, char **argv) {
 	}
 
 	{
-		TDigits v = v0;
+		std::vector<TDigit> v = v0;
 		auto t = mtime();
 		radixSort(v);
 		LOG("radixSort        " << std::setw(10) << mtime() - t << " ms");
@@ -94,12 +89,26 @@ int main(int argc, char **argv) {
 
 	if (size <= 100000)
 	{
-		TDigits v = v0;
+		std::vector<TDigit> v = v0;
 		auto t = mtime();
 		bubbleSort(v);
 		LOG("bubbleSort       " << std::setw(10) << mtime() - t << " ms");
 		assert(v1 == v);
 	}
+}
+
+int main(int argc, char **argv) {
+	srand(time(NULL));
+
+	int size = 10;
+	if (argc > 1) {
+		size = atol(argv[1]);
+	}
+	LOG1(size);
+	test<uint8_t>(size);
+	test<uint16_t>(size);
+	test<uint32_t>(size);
+	test<uint64_t>(size);
 
 	return 0;
 }
